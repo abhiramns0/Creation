@@ -570,11 +570,10 @@ gradient.addColorStop(1, '#02060C');
 if (mouse.x !== undefined) {
     const r = canvas.getBoundingClientRect();
     const mx = mouse.x - r.left, my = mouse.y - r.top;
- //NEW ADDITION   
- const glow = ctx.createRadialGradient(mx, my, 0, mx, my, 450);   // 450 = spread (was 280)
-glow.addColorStop(0, 'rgba(90, 170, 220, 0.05)');                // 0.05 = intensity (was 0.10)
-glow.addColorStop(0.5, 'rgba(90, 170, 220, 0.02)');              // extra stop for a smoother fade
-glow.addColorStop(1, 'rgba(90, 170, 220, 0)');
+    const glow = ctx.createRadialGradient(mx, my, 0, mx, my, 450);
+    glow.addColorStop(0, 'rgba(90, 170, 220, 0.05)');
+    glow.addColorStop(0.5, 'rgba(90, 170, 220, 0.02)');
+    glow.addColorStop(1, 'rgba(90, 170, 220, 0)');
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
