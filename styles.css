@@ -131,11 +131,11 @@ main {
     position: relative;
     margin: 40px auto 0;
     font-family: 'Sansation';
-    font-weight: 400;
+    font-weight: 300;
     font-size: 18px;
     max-width: 710px;
     text-align: center;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     line-height: 36px;
     color: #FFFFFF;
     text-shadow: 0 1px 12px rgba(3, 9, 20, 0.9);
@@ -146,11 +146,11 @@ main {
 .hero-description::before {
     content: "";
     position: absolute;
-    inset: -60px -90px;          /* how far the dark area extends past the text */
+    inset: -1200px -1800px;          /* how far the dark area extends past the text */
     background: radial-gradient(
         ellipse at center,
-        rgba(3, 9, 20, 0.85) 0%,
-        rgba(3, 9, 20, 0.65) 45%,
+        rgba(3, 9, 20, 0.55) 0%,
+        rgba(3, 9, 20, 0.45) 45%,
         rgba(3, 9, 20, 0) 75%
     );
     z-index: -1;
