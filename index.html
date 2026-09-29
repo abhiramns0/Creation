@@ -414,9 +414,9 @@
     const BASE_DENSITY = 0.005;
     const FOCUS_AREAS = [
         {centerX: 0.15, centerY: 0.95, radius: 0.3, densityMultiplier: 1}, //bottom left
-        {centerX: 0.35, centerY: 0.85, radius: 0.3, densityMultiplier: 0.5},
-        {centerX: 0.4, centerY: 0.5, radius: 0.3, densityMultiplier: .25}, // centre
-        {centerX: 0.65, centerY: 0.55, radius: 0.4, densityMultiplier: 0.1}, // centre
+        {centerX: 0.35, centerY: 0.85, radius: 0.3, densityMultiplier: 0.75},
+        {centerX: 0.4, centerY: 0.5, radius: 0.3, densityMultiplier: 0}, // centre
+        {centerX: 0.65, centerY: 0.55, radius: 0.4, densityMultiplier: 0}, // centre
         {centerX: 0.75, centerY: 0.35, radius: 0.2, densityMultiplier: 0.5},
         {centerX: 1.0, centerY: 0.15, radius: 0.3, densityMultiplier: 1} //topright
     ];
@@ -474,18 +474,21 @@ update(t) {
     if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
 }
 
+
+     //NEW ADDITION
         draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.isBokeh 
-                ? `rgba(${COLOR}, ${this.opacity})` 
-                : `rgba(${COLOR}, ${this.opacity})`; // Light blue with opacity
-            ctx.shadowColor = 'rgba(${COLOR}, 0.8)'; // Glow color for light/water droplet effect
-            ctx.shadowBlur = this.isBokeh ? GLOW_BLUR * 2 : GLOW_BLUR; // Stronger blur for bokeh atmosphere
-            ctx.fill();
-            ctx.shadowBlur = 0; // Reset to avoid affecting lines
-        }
-    }
+    // 0 = smallest circle, 1 = biggest (only used for bokeh)
+    const s = this.isBokeh ? (this.size - BOKEH_SIZE_MIN) / (BOKEH_SIZE_MAX - BOKEH_SIZE_MIN) : 0;
+    const fade = 1 - 0.35 * s;   // biggest circles are 35% dimmer. Try 0.2 for a subtler difference
+
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(173, 216, 230, ${this.opacity * fade})`;
+    ctx.shadowColor = `rgba(173, 216, 230, ${0.8 * fade})`;
+    ctx.shadowBlur = (this.isBokeh ? GLOW_BLUR * 2 : GLOW_BLUR) * fade;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+}
 
     let particles = [];
     let bokehParticles = [];
@@ -567,9 +570,11 @@ gradient.addColorStop(1, '#02060C');
 if (mouse.x !== undefined) {
     const r = canvas.getBoundingClientRect();
     const mx = mouse.x - r.left, my = mouse.y - r.top;
-    const glow = ctx.createRadialGradient(mx, my, 0, mx, my, 280);
-    glow.addColorStop(0, 'rgba(90, 170, 220, 0.10)');
-    glow.addColorStop(1, 'rgba(90, 170, 220, 0)');
+ //NEW ADDITION   
+ const glow = ctx.createRadialGradient(mx, my, 0, mx, my, 450);   // 450 = spread (was 280)
+glow.addColorStop(0, 'rgba(90, 170, 220, 0.05)');                // 0.05 = intensity (was 0.10)
+glow.addColorStop(0.5, 'rgba(90, 170, 220, 0.02)');              // extra stop for a smoother fade
+glow.addColorStop(1, 'rgba(90, 170, 220, 0)');
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
