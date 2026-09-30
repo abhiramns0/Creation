@@ -387,6 +387,9 @@
   <script>
 
    // NEW ADDITION
+
+const COLOR = '140, 200, 235'; // r, g, b
+   
 // ---- Mobile detection (phones get a subtler version) ----
 const IS_MOBILE = window.matchMedia('(max-width: 768px)').matches;
 const M = (mobile, desktop) => IS_MOBILE ? mobile : desktop;
@@ -539,6 +542,8 @@ update(t) {
 
     resizeCanvas(); // Initial setup
 
+let mouse = { x: undefined, y: undefined };
+   
    let touchTimer;
 function setPointer(x, y) {
     clearTimeout(touchTimer);
