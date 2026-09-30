@@ -31,16 +31,6 @@
 
 <body>
 
-
-  
-<div class="animation-container" aria-hidden="true">
-    <svg id="animationSvg" preserveAspectRatio="none">
-      <path id="animTriangle" class="shape" />
-      <circle id="animCircle" class="shape" r="20" />
-    </svg>
-  </div>
-  <!-- Animation container (kept for future interactive BG; safe z-index via CSS) -->
-
   
 
   <!-- Navbar -->
@@ -222,8 +212,6 @@
 
   </main>
 
-  <!-- Keep your animation script if used -->
-  <script src="interactive-bg.js"></script>
 
   <!-- Navbar show/hide & scroll helpers -->
   <script>
@@ -284,103 +272,9 @@
       // Init state
       nav.classList.add('nav-top');
     })();
-
-    // (Optional) Minimal animation controller kept from your previous file
-    class AnimationController {
-      constructor() {
-        this.circle = document.getElementById('animCircle');
-        this.triangle = document.getElementById('animTriangle');
-        if (!this.circle || !this.triangle) return;
-        this.isAnimating = false;
-        this.circleRadius = 10;
-        this.triangleSize = 20;
-        this.animationDuration = 2000;
-        this.minGap = 80;
-        this.circleSpeed = 1.0;
-        this.triangleSpeed = 0.7;
-        this.lastScrollPosition = window.scrollY;
-        this.lastAnimationTime = 0;
-        this.init();
-      }
-      init() {
-        setTimeout(() => this.animate('normal'), 5000);
-        setTimeout(() => { if (!this.isAnimating) this.animate('normal'); }, 60000);
-      }
-      generatePath() {
-        const width = window.innerWidth, height = window.innerHeight;
-        const startPoint = this.getEdgePoint();
-        const endPoint = this.getEdgePoint(true);
-        const centerX = width / 2, centerY = height / 2;
-        return {
-          start: startPoint,
-          end: endPoint,
-          control1: { x: centerX + (Math.random()-0.5)*width*0.3, y: centerY + (Math.random()-0.5)*height*0.3 },
-          control2: { x: centerX + (Math.random()-0.5)*width*0.3, y: centerY + (Math.random()-0.5)*height*0.3 }
-        };
-      }
-      getEdgePoint(opposite = false) {
-        const w = window.innerWidth, h = window.innerHeight;
-        const side = opposite ? (this.startSide + 2) % 4 : Math.floor(Math.random() * 4);
-        this.startSide = side;
-        switch (side) {
-          case 0: return { x: -50, y: h * Math.random() };
-          case 1: return { x: w + 50, y: h * Math.random() };
-          case 2: return { x: w * Math.random(), y: -50 };
-          default: return { x: w * Math.random(), y: h + 50 };
-        }
-      }
-      getBezierPoint(t, p0, p1, p2, p3) {
-        const u = 1 - t;
-        return {
-          x: u*u*u*p0.x + 3*u*u*t*p1.x + 3*u*t*t*p2.x + t*t*t*p3.x,
-          y: u*u*u*p0.y + 3*u*u*t*p1.y + 3*u*t*t*p2.y + t*t*t*p3.y
-        };
-      }
-      updateTrianglePosition(x, y, prevX, prevY) {
-        const angle = Math.atan2(y - prevY, x - prevX);
-        const size = this.triangleSize;
-        const points = [{x:-size,y:-size/2},{x:-size,y:size/2},{x:size,y:0}];
-        const rp = points.map(p => ({
-          x: x - this.minGap * Math.cos(angle) + (p.x * Math.cos(angle) - p.y * Math.sin(angle)),
-          y: y - this.minGap * Math.sin(angle) + (p.x * Math.sin(angle) + p.y * Math.cos(angle))
-        }));
-        this.triangle.setAttribute('d', `M ${rp[0].x},${rp[0].y} L ${rp[1].x},${rp[1].y} L ${rp[2].x},${rp[2].y} Z`);
-      }
-      animate() {
-        if (this.isAnimating) return;
-        this.isAnimating = true;
-        const path = this.generatePath();
-        const startTime = performance.now();
-        let prevX = path.start.x, prevY = path.start.y;
-        this.circle.style.opacity = 1;
-        this.triangle.style.opacity = 1;
-
-        const step = (now) => {
-          const elapsed = now - startTime;
-          let cp = (elapsed / this.animationDuration) * this.circleSpeed;
-          let tp = (elapsed / this.animationDuration) * this.triangleSpeed;
-          if (cp >= 1 && tp >= 1) {
-            this.isAnimating = false;
-            this.circle.style.opacity = 0;
-            this.triangle.style.opacity = 0;
-            return;
-          }
-          if (tp < 1) {
-            const tpos = this.getBezierPoint(Math.min(tp,1), path.start, path.control1, path.control2, path.end);
-            this.updateTrianglePosition(tpos.x, tpos.y, prevX, prevY);
-            prevX = tpos.x; prevY = tpos.y;
-          }
-          if (cp < 1) {
-            const cpos = this.getBezierPoint(Math.min(cp,1), path.start, path.control1, path.control2, path.end);
-            this.circle.setAttribute('cx', cpos.x);
-            this.circle.setAttribute('cy', cpos.y);
-          }
-          requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
-      }
-    }
-    window.addEventListener('load', () => { new AnimationController(); });
+   
+// Removed circle triangle animation from here
+   
   </script>
 
   <!-- New: Interactive background script for hero section -->
